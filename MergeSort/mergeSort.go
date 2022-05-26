@@ -2,44 +2,49 @@ package main
 
 import "fmt"
 
-// Merge sort
-func mergeSort(listItems []int) []int {
-	if len(listItems) < 2 {
-		return listItems
-	}
-	firstPart := mergeSort(listItems[:len(listItems)/2])
-	secondPart := mergeSort(listItems[len(listItems)/2:])
-	return merge(firstPart, secondPart)
+// main is the entry point for the application
+func main() {
+	arr := []int{5, 4, 3, 2, 1}
+	fmt.Println("Unsorted array:", arr)
+	fmt.Println("Sorted array:", mergeSort(arr))
 }
 
-// Merge algorithm
-func merge(items1 []int, items2 []int) []int {
-	finalItems := []int{}
+// mergeSort sorts the input array in ascending order
+func mergeSort(arr []int) []int {
+	if len(arr) <= 1 {
+		return arr
+	}
 
-	i := 0
-	j := 0
+	mid := len(arr) / 2
+	left := mergeSort(arr[:mid])
+	right := mergeSort(arr[mid:])
 
-	for i < len(items1) && j < len(items2) {
-		if items1[i] < items2[j] {
-			finalItems = append(finalItems, items1[i])
-			i++
+	return merge(left, right)
+}
+
+// merge merges two sorted arrays into one sorted array
+func merge(left, right []int) []int {
+	var result []int
+
+	for len(left) > 0 && len(right) > 0 {
+		if left[0] < right[0] {
+			result = append(result, left[0])
+			left = left[1:]
 		} else {
-			finalItems = append(finalItems, items2[j])
-			j++
+			result = append(result, right[0])
+			right = right[1:]
 		}
 	}
-	for ; i < len(items1); i++ {
-		finalItems = append(finalItems, items1[i])
-	}
-	for ; j < len(items2); j++ {
-		finalItems = append(finalItems, items2[j])
-	}
-	return finalItems
-}
 
-func main() {
-	fmt.Println("Merge sort working...")
-	sampleList := []int{1, 25, 33, 99, 6, 15, 36, 5, 10, 22, 74, 66, 41}
-	result := mergeSort(sampleList)
-	fmt.Println(result)
+	for len(left) > 0 {
+		result = append(result, left[0])
+		left = left[1:]
+	}
+
+	for len(right) > 0 {
+		result = append(result, right[0])
+		right = right[1:]
+	}
+
+	return result
 }
